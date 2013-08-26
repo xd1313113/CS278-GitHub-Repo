@@ -109,13 +109,13 @@ public class SMSManagerImpl implements SMSManager, SMSSender {
 	 */
 	
 	public void sendSMS(SMS sms) {
-		Log.i("sms","sendSMS" + sms.getTo() + " "+ sms.getContent());
+		Log.i("sms","sendSMS to " + sms.getTo() + " "+ sms.getContent());
 		send(sms.getTo(),sms.getContent());
 	}
 
 	@SodaAsync
 	public void send(String to, String msg) {
-		Log.i("sms","send" + to + " "+ msg);
+		Log.i("sms","send to" + to + " "+ msg);
 		// TODO Auto-generated method stub
 		SmsManager mgr = SmsManager.getDefault();
 		mgr.sendTextMessage(to, null, msg, null, null);
