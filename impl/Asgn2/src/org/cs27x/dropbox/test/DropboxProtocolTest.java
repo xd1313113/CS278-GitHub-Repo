@@ -40,6 +40,7 @@ public class DropboxProtocolTest {
 
 	@Test
 	public void testDoOperations() {
+		
 		ArrayList<DropboxCmd> cmds = new ArrayList<DropboxCmd>();
 		cmds.add( new DropboxCmd(OpCode.ADD));
 		cmds.add( new DropboxCmd(OpCode.UPDATE));

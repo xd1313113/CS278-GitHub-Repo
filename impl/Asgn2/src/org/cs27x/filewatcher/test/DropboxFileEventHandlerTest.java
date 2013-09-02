@@ -1,4 +1,4 @@
-package org.cs27x.dropbox.test;
+package org.cs27x.filewatcher.test;
 
 import static java.nio.file.StandardWatchEventKinds.*;
 import static org.mockito.Matchers.any;
