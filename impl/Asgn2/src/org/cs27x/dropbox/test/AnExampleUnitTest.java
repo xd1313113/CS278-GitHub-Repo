@@ -1,23 +1,23 @@
 package org.cs27x.dropbox.test;
 
 import static java.nio.file.StandardWatchEventKinds.ENTRY_CREATE;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.eq;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
-import static org.mockito.Mockito.*;
-import static org.junit.Assert.*;
+import static org.mockito.Mockito.when;
 
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.util.logging.FileHandler;
 
 import org.cs27x.dropbox.DefaultFileManager;
 import org.cs27x.dropbox.Dropbox;
 import org.cs27x.dropbox.DropboxProtocol;
 import org.cs27x.filewatcher.DropboxFileEventHandler;
 import org.cs27x.filewatcher.FileEvent;
-import org.cs27x.filewatcher.FileStates;
+import org.cs27x.filewatcher.FileStatesImpl;
 import org.junit.Test;
 
 /**
@@ -71,6 +71,7 @@ public class AnExampleUnitTest {
 	public void aBadTestWithAMockObject() throws Exception {
 		//Creating a mock object
 		DropboxProtocol transport = mock(DropboxProtocol.class);
+		//FileStates filestates = mock(FileStates.class);
 		
 		// An example of stubbing a mock object to make it behave
 		// like you want.
@@ -84,7 +85,7 @@ public class AnExampleUnitTest {
 		// and the real deal
 		DropboxFileEventHandler hdlr = new DropboxFileEventHandler(
 					new DefaultFileManager(Paths.get("test-data/working-dir")),
-					new FileStates(),
+					new FileStatesImpl(),
 					transport);
 		
 		Path p = Paths.get("some_test_path");

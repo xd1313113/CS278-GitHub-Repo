@@ -15,6 +15,17 @@ public class DropboxCmd implements Serializable {
 	private byte[] data_;
 	private OpCode opCode_;
 
+	
+	
+	public DropboxCmd(OpCode opCode_) {
+		super();
+		this.opCode_ = opCode_;
+	}
+
+	public DropboxCmd() {
+		super();
+	}
+
 	public String getFrom() {
 		return from_;
 	}
