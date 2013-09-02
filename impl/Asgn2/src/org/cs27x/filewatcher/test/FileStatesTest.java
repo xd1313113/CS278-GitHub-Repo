@@ -28,27 +28,24 @@ public class FileStatesTest {
 			Files.createFile(path1);
 		//file exist and get state
 		FileState fs1 = fileStates.getState(path1);
-		assertEquals("size", -1, fs1.getSize());
-		assertNull("Filetime",fs1.getLastModificationDate());
+		assertNull("Filetime",fs1);
 		
 		//file missing and get state
 		Files.delete(path1);
 		FileState fs2 = fileStates.getState(path1);
-		assertEquals("size", -1, fs2.getSize());
-		assertNull("Filetime",fs2.getLastModificationDate());
+		assertNull("Filetime",fs2);
 		
 		//File never exists
 		Path path2 = Paths.get("test-data/invariant/test2");
 		if (Files.exists(path2))
 			Files.delete(path2);
 		FileState fs3 = fileStates.getState(path1);
-		assertEquals("size", -1, fs3.getSize());
-		assertNull("Filetime",fs3.getLastModificationDate());	
+		assertNull("Filetime",fs3);
 	}
 
 	@Test
 	public void testGetOrCreateState() throws IOException {
-		Path path1 = Paths.get("test-data/invariant/test1");
+		Path path1 = Paths.get("test-data/invariant/test3");
 		if (!Files.exists(path1))
 			Files.createFile(path1);
 		//file exist and get state
@@ -63,7 +60,7 @@ public class FileStatesTest {
 		assertNull("Filetime",fs2.getLastModificationDate());
 		
 		//File never exists
-		Path path2 = Paths.get("test-data/invariant/test2");
+		Path path2 = Paths.get("test-data/invariant/test4");
 		if (Files.exists(path2))
 			Files.delete(path2);
 		FileState fs3 = fileStates.getOrCreateState(path1);
