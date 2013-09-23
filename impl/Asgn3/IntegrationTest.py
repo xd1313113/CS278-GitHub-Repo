@@ -1,15 +1,23 @@
-from multiprocessing import Process
-import time
-import os
-import socket
-import shutil
 import filecmp
+from multiprocessing import Pool
+import os
+import shutil
+import socket
+import time
+import subprocess
+
 
 #coding=utf8 
-
 ServerPath = "server"
 ClientPath = "client"
-TimeOut = 5
+TimeOut = 30
+output = "result.txt"
+
+def logToFile(content):       
+    outFile = open(output,'a')
+    outFile.write(content)
+    outFile.flush()
+    outFile.close()
 
 #Start the server side
 def Server():
@@ -48,17 +56,17 @@ def wait():
     time.sleep(TimeOut)  
 
 
-def testClientAddUpdateRemoveFromClienttoServer():
+def testAddUpdateRemoveFromClienttoServer():
     #test add
     add = ClientPath+"/"+"add.txt"
     createNewFile(add, "add")
     wait()
     if not os.path.exists(add):
-        print "add from client Fails"
+        logToFile( "add from client Fails")
     elif not filecmp.cmp(add,  ServerPath+"/"+"add.txt"):
-        print "add from client Fails"
+        logToFile( "add from client Fails")
     else:
-        print "add from client Pass"
+        logToFile( "add from client Pass" )
         
     #test update
     createNewFile(add, "add")
@@ -66,9 +74,9 @@ def testClientAddUpdateRemoveFromClienttoServer():
     wait()
     
     if not filecmp.cmp(add,  ServerPath+"/"+"add.txt"):
-        print "update from client Fails"
+        logToFile( "update from client Fails")
     else:
-        print "update from client Pass"
+        logToFile( "update from client Pass")
         
     #test remove
     remove = ClientPath+"/"+"remove.txt"
@@ -76,21 +84,21 @@ def testClientAddUpdateRemoveFromClienttoServer():
     os.remove(remove)
     wait()
     if os.path.exists(remove):
-        print "remove from client fails"
+        logToFile( "remove from client fails")
     else:
-        print "remove from client pass"
+        logToFile(  "remove from client pass")
 
-def testClientAddUpdateRemoveFromServertoClient():
+def testAddUpdateRemoveFromServertoClient():
     #test add
     add = ServerPath+"/"+"add.txt"
     createNewFile(add, "add")
     wait()
     if not os.path.exists(add):
-        print "add from client Fails"
+        logToFile( "add from client Fails")
     elif not filecmp.cmp(add,  ClientPath+"/"+"add.txt"):
-        print "add from Server Fails"
+        logToFile( "add from Server Fails")
     else:
-        print "add from Server Pass"
+        logToFile( "add from Server Pass" )
         
     #test update
     createNewFile(add, "add")
@@ -98,9 +106,9 @@ def testClientAddUpdateRemoveFromServertoClient():
     wait()
     
     if not filecmp.cmp(add,  ClientPath+"/"+"add.txt"):
-        print "update from Server Fails"
+        logToFile( "update from Server Fails")
     else:
-        print "update from Server Pass"
+        logToFile( "update from Server Pass" )
         
     #test remove
     remove = ServerPath+"/"+"remove.txt"
@@ -108,42 +116,44 @@ def testClientAddUpdateRemoveFromServertoClient():
     os.remove(remove)
     wait()
     if os.path.exists(remove):
-        print "remove from Server fails"
+        logToFile(  "remove from Server fails")
     else:
-        print "remove from Server pass"
+        logToFile(  "remove from Server pass" )
     
+def test():
+    print "testClientAddUpdateRemoveFromClienttoServer"
+    testAddUpdateRemoveFromClienttoServer()
     
+    print "testClientAddUpdateRemoveFromServertoClient"
+    testAddUpdateRemoveFromServertoClient()    
     
 if __name__ == '__main__':
     print "begin integration testing"
     print os.path.abspath(__file__)
     print os.getcwd()
+    
+    pool = Pool(processes=3)
+    pool.apply_async(Server)
     print "Start server"
     createNewDir(ServerPath)  
-    server = Process(target=Server)
-    server.daemon = True
-    server.start()
-    server.join()
     
-    time.sleep(10);
+    time.sleep(30);
     print "Start client"
     createNewDir(ClientPath)  
-    client = Process(target=Client)
-    server.daemon = True
-    client.start()
-    client.join()
-    time.sleep(10);
+    pool.apply_async(Client)
+    time.sleep(30);
+    #pool.apply_async(test)
     
-    print "testClientAddUpdateRemoveFromServertoClient"
-    testClientAddUpdateRemoveFromServertoClient()
+    pool.close()
     
-    print "testClientAddUpdateRemoveFromServertoClient"
-    testClientAddUpdateRemoveFromServertoClient()
     
-    #close the each process
-    if client.is_alive():
-        client.terminate()
-    if server.is_alive():
-        server.terminate()
+    pool.join()
+    
+    
+    
+    
+
+    
+
         
     
