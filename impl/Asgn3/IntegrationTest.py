@@ -1,10 +1,8 @@
 import filecmp
-from multiprocessing import Pool
 import os
-import shutil
 import socket
-import time
 import subprocess
+import time
 
 
 #coding=utf8 
@@ -18,21 +16,6 @@ def logToFile(content):
     outFile.write(content)
     outFile.flush()
     outFile.close()
-
-#Start the server side
-def Server():
-    #createNewDir(ServerPath)  
-    command ='java -jar JavaTestingExercise.jar '+ ServerPath
-    os.system(command)
-
-#start the client side
-def Client():
-    #createNewDir(ClientPath)
-    serverip = socket.gethostbyname_ex(socket.gethostname())
-    ip = serverip[2][1]
-    print "connect to server:"+ ip 
-    command ='java -jar JavaTestingExercise.jar '+ ServerPath + " " + ip
-    os.system(command) 
   
 # delete old directory if exists, and create a new one  
 def createNewDir(name):     
@@ -61,22 +44,26 @@ def testAddUpdateRemoveFromClienttoServer():
     add = ClientPath+"/"+"add.txt"
     createNewFile(add, "add")
     wait()
-    if not os.path.exists(add):
-        logToFile( "add from client Fails")
-    elif not filecmp.cmp(add,  ServerPath+"/"+"add.txt"):
+    if not os.path.exists(ServerPath+"/"+"add.txt"):
         logToFile( "add from client Fails")
     else:
-        logToFile( "add from client Pass" )
+        if not filecmp.cmp(add,  ServerPath+"/"+"add.txt"):
+            logToFile( "add from client Fails")
+        else:
+            logToFile( "add from client Pass" )
         
     #test update
     createNewFile(add, "add")
     updateFile(add,"update")
     wait()
     
-    if not filecmp.cmp(add,  ServerPath+"/"+"add.txt"):
+    if not os.path.exists(ServerPath+"/"+"add.txt"):
         logToFile( "update from client Fails")
     else:
-        logToFile( "update from client Pass")
+        if not filecmp.cmp(add,  ServerPath+"/"+"add.txt"):
+            logToFile( "update from client Fails")
+        else:
+            logToFile( "update from client Pass")
         
     #test remove
     remove = ClientPath+"/"+"remove.txt"
@@ -93,22 +80,25 @@ def testAddUpdateRemoveFromServertoClient():
     add = ServerPath+"/"+"add.txt"
     createNewFile(add, "add")
     wait()
-    if not os.path.exists(add):
+    if not os.path.exists(ClientPath+"/"+"add.txt"):
         logToFile( "add from client Fails")
-    elif not filecmp.cmp(add,  ClientPath+"/"+"add.txt"):
-        logToFile( "add from Server Fails")
     else:
-        logToFile( "add from Server Pass" )
+        if not filecmp.cmp(add,  ClientPath+"/"+"add.txt"):
+            logToFile( "add from Server Fails")
+        else:
+            logToFile( "add from Server Pass" )
         
     #test update
     createNewFile(add, "add")
     updateFile(add,"update")
     wait()
-    
-    if not filecmp.cmp(add,  ClientPath+"/"+"add.txt"):
-        logToFile( "update from Server Fails")
-    else:
-        logToFile( "update from Server Pass" )
+    if not os.path.exists(ClientPath+"/"+"add.txt"):
+        logToFile( " from client Fails")
+    else:    
+        if not filecmp.cmp(add,  ClientPath+"/"+"add.txt"):
+            logToFile( "update from Server Fails")
+        else:
+            logToFile( "update from Server Pass" )
         
     #test remove
     remove = ServerPath+"/"+"remove.txt"
@@ -132,22 +122,24 @@ if __name__ == '__main__':
     print os.path.abspath(__file__)
     print os.getcwd()
     
-    pool = Pool(processes=3)
-    pool.apply_async(Server)
     print "Start server"
     createNewDir(ServerPath)  
-    
+    server = subprocess.Popen('java -jar JavaTestingExercise.jar '+ ServerPath, shell=True)
     time.sleep(30);
     print "Start client"
     createNewDir(ClientPath)  
-    pool.apply_async(Client)
+    serverip = socket.gethostbyname_ex(socket.gethostname())
+    ip = serverip[2][1]
+    print "connect to server:"+ ip 
+    client =subprocess.Popen('java -jar JavaTestingExercise.jar '+ ServerPath + " " + ip, shell=True)
     time.sleep(30);
-    #pool.apply_async(test)
+    #start testing
+    test()
+    server.terminate()
+    client.terminate()
     
-    pool.close()
     
-    
-    pool.join()
+
     
     
     
