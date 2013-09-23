@@ -1,3 +1,8 @@
+Usage
+Compile the source file and generate the runnable jar file in the root directory of the project folder 
+and the run the integration test script written in python
+
+
 ----------------------------------------------------------------------------------
 Assignment 3
 ----------------------------------------------------------------------------------
