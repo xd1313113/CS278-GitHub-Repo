@@ -1,0 +1,1 @@
+The class Diagram is based on the Accounts related classes in the android source code.
