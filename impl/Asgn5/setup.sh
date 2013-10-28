@@ -1,3 +1,5 @@
+cd /vagrant
+
 ant init
 ant clean
 ant build 
