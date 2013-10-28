@@ -14,7 +14,7 @@ public class RequestProcessorThread extends Thread{
 			synchronized (queue) {
 				if(!queue.isEmpty()){
 					queue.remove(queue.size()-1).execute();
-					System.out.println("One req is processed by the server");
+					System.out.println("Processor: "+"One req is processed by the server");
 				}
 			}
 		}

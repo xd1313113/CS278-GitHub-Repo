@@ -20,7 +20,7 @@ public class RequestCollectorThread extends Thread{
 			Requests reqData = (Requests) ois.readObject( ); 
 			synchronized (queue) {
 				queue.add(reqData);
-				System.out.println("One req is added to queue");
+				System.out.println("Collector"+"One req is added to queue");
 			}
 			dataSocket.close(); 
 		} catch (Exception e) {

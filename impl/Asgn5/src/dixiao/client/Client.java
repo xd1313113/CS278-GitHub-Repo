@@ -1,4 +1,4 @@
-package di.xiao.client;
+package dixiao.client;
 
 import java.util.ArrayList;
 import java.util.List;

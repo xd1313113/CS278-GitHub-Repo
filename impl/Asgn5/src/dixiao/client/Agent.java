@@ -1,4 +1,4 @@
-package di.xiao.client;
+package dixiao.client;
 
 import java.io.ObjectOutputStream;
 import java.net.Socket;
@@ -17,9 +17,9 @@ public class Agent{
 		        Socket clientSocket = new Socket(Constants.serverIP,Constants.portNum);
 		        System.out.println("Connecting to the server");
 		        ObjectOutputStream oos = new ObjectOutputStream(clientSocket.getOutputStream( )); 
-		        oos.writeObject(req); 
-		        System.out.println("The client is submitting the order: Name"+ req.getItem().name+
+		        System.out.println("Client: "+"The client is submitting the order: Name"+ req.getItem().name+
 		        		","+ "Action:" +req.getAction());
+		        oos.writeObject(req); 
 		        oos.flush();
 		        oos.close();
 		        clientSocket.close();
