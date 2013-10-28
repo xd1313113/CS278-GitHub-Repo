@@ -4,6 +4,9 @@
     <property name="debuglevel" value="source,lines,vars"/>
     <property name="target" value="1.7"/>
     <property name="source" value="1.7"/>
+	<!-- Variables used for JUnit testin -->
+    <property name="test.dir" location="src" />
+    <property name="test.report.dir" location="testreport" />
     <path id="Asgn5.classpath">
         <pathelement location="bin"/>
         <pathelement location="libs/mockito-all-1.9.0.jar"/>
@@ -12,6 +15,7 @@
     </path>
     <target name="init">
         <mkdir dir="bin"/>
+		<mkdir dir="${test.report.dir}" />
         <copy includeemptydirs="false" todir="bin">
             <fileset dir="src">
                 <exclude name="**/*.java"/>
@@ -20,6 +24,7 @@
     </target>
     <target name="clean">
         <delete dir="bin"/>
+		<delete dir="${test.report.dir}" />
     </target>
     <target depends="clean" name="cleanall"/>
     <target depends="build-subprojects,build-project" name="build"/>
@@ -45,6 +50,21 @@
         <property name="build.compiler" value="org.eclipse.jdt.core.JDTCompilerAdapter"/>
         <antcall target="build"/>
     </target>
+	
+	<!-- Run the JUnit Tests -->
+  <!-- Output is XML, could also be plain-->
+  <target name="junit" depends="build">
+    <junit printsummary="on" fork="true" haltonfailure="yes">
+      <classpath refid="Asgn5.classpath" />
+      <formatter type="xml" />
+      <batchtest todir="${test.report.dir}">
+        <fileset dir="src">
+          <include name="**/*test*.java" />
+        </fileset>
+      </batchtest>
+    </junit>
+  </target>
+  
       <!--Creates the deployable jar file  -->
   <target name="jar_server" depends="build">
     <jar destfile="server.jar">
